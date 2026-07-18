@@ -1,13 +1,5 @@
-// Vercel build configuration
-{
-  "env": [
-    "DATABASE_URL",
-    "OPENAI_API_KEY",
-    "JWT_SECRET",
-    "CORS_ORIGIN",
-    "APP_URL"
-  ],
-  "buildOutputDirectory": "dist",
-  "publicDirectory": "public"
-}
-# Deployment trigger
+src/server
+dist/server
+*.ts
+!src/client
+node_modules/.prisma
