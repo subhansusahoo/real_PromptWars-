@@ -1,0 +1,135 @@
+// Habit Breaker AI - Prisma Schema
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User Model
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  habits        Habit[]
+  checkIns      CheckIn[]
+  motivations   Motivation[]
+  activities    Activity[]
+  
+  @@map("users")
+}
+
+// Addiction/Habit Model
+model Habit {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name          String    // Custom or predefined addiction name
+  description   String?
+  category      String    // Smoking, Drinking, Masturbation, Porn, Stress Eating, Custom
+  reason        String?   // Why user wants to quit
+  
+  startDate     DateTime  @default(now())
+  streakCount   Int       @default(0)
+  longestStreak Int       @default(0)
+  
+  // Statistics
+  totalCheckIns Int       @default(0)
+  successfulDays Int      @default(0)
+  failedDays    Int       @default(0)
+  
+  isActive      Boolean   @default(true)
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  checkIns      CheckIn[]
+  panicLogs     PanicLog[]
+  
+  @@map("habits")
+  @@index([userId])
+}
+
+// Daily Check-In Model
+model CheckIn {
+  id            String    @id @default(cuid())
+  habitId       String
+  habit         Habit     @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  date          DateTime  @default(now())
+  status        String    // "success" or "failed"
+  notes         String?   // User notes about their day
+  
+  createdAt     DateTime  @default(now())
+  
+  @@map("check_ins")
+  @@index([habitId])
+  @@index([userId])
+  @@index([date])
+  @@unique([habitId, date])
+}
+
+// Panic Button Log
+model PanicLog {
+  id            String    @id @default(cuid())
+  habitId       String
+  habit         Habit     @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  
+  triggeredAt   DateTime  @default(now())
+  
+  // AI Response stored
+  motivationalMessage String?
+  suggestedActivities String? // JSON string of activities
+  
+  createdAt     DateTime  @default(now())
+  
+  @@map("panic_logs")
+  @@index([habitId])
+}
+
+// Motivational Messages (for varied AI responses)
+model Motivation {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  habitCategory String    // Category of habit
+  message       String    // Motivational message
+  isCustom      Boolean   @default(false)
+  
+  createdAt     DateTime  @default(now())
+  
+  @@map("motivations")
+  @@index([userId])
+}
+
+// Distraction Activities
+model Activity {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title         String    // Activity title
+  description   String?   // Activity description
+  duration      Int       // Duration in minutes
+  category      String    // Exercise, Meditation, Social, Hobby, etc.
+  
+  createdAt     DateTime  @default(now())
+  
+  @@map("activities")
+  @@index([userId])
+}
