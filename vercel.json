@@ -3,7 +3,6 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "outputDirectory": "dist/client",
-  "publicPath": "/",
   "env": {
     "DATABASE_URL": "@DATABASE_URL",
     "OPENAI_API_KEY": "@OPENAI_API_KEY",
