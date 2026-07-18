@@ -3,6 +3,7 @@ node_modules
 .env
 .env.local
 .env.*.local
+.env.production.local
 
 /generated/prisma
 dist/
@@ -37,6 +38,8 @@ out/
 coverage/
 .nyc_output/
 
+# Vercel
+.vercel/
+
 # Production
 .env.production
-.env.production.local
