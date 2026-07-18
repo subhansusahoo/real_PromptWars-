@@ -2,23 +2,17 @@
   "version": 2,
   "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "outputDirectory": "dist",
+  "outputDirectory": "dist/client",
+  "publicPath": "/",
   "env": {
     "DATABASE_URL": "@DATABASE_URL",
     "OPENAI_API_KEY": "@OPENAI_API_KEY",
     "JWT_SECRET": "@JWT_SECRET",
     "NODE_ENV": "production"
   },
-  "functions": {
-    "api/**/*.ts": {
-      "memory": 1024,
-      "maxDuration": 60
-    }
-  },
   "regions": ["iad1"],
   "github": {
     "enabled": true,
     "autoAlias": true
-  },
-  "framework": "vite"
+  }
 }
