@@ -1,0 +1,12 @@
+// Vercel build configuration
+{
+  "env": [
+    "DATABASE_URL",
+    "OPENAI_API_KEY",
+    "JWT_SECRET",
+    "CORS_ORIGIN",
+    "APP_URL"
+  ],
+  "buildOutputDirectory": "dist",
+  "publicDirectory": "public"
+}
